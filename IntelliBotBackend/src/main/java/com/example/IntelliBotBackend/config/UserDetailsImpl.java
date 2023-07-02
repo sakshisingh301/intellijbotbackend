@@ -21,7 +21,7 @@ public class UserDetailsImpl implements UserDetails {
     public UserDetailsImpl(Optional<RegisteredUser> user){
         this.username=user.get().getEmail();
         this.password=user.get().getPassword();
-        this.active=user.get().isActive();
+        this.active=user.get().getActive();
         this.authorityList= null;
     }
 

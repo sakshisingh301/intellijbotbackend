@@ -1,5 +1,6 @@
 package com.example.IntelliBotBackend.controller;
 
+import com.example.IntelliBotBackend.entity.RegisteredUser;
 import com.example.IntelliBotBackend.request.Login;
 import com.example.IntelliBotBackend.request.RegisterUser;
 import com.example.IntelliBotBackend.response.AuthenticationResponse;
@@ -16,14 +17,13 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/sign-up")
-    @ResponseBody
-    public ResponseEntity<String> signup(@RequestBody RegisterUser registerUser){
-        authService.signup(registerUser);
-        return new ResponseEntity<>("User Registration Successful", HttpStatus.OK);
+    public ResponseEntity<?> signup(@RequestBody RegisteredUser registerUser){
+        return authService.signup(registerUser);
     }
-    @PostMapping("/sign-in")
-    public AuthenticationResponse login(@RequestBody Login login){
-        return authService.login(login);
-
-    }
+//    @PostMapping("/sign-in")
+//    public AuthenticationResponse login(@RequestBody Login login){
+//
+//        return authService.login(login);
+//
+//    }
 }

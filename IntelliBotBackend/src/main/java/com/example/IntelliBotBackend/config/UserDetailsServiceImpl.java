@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,9 +29,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<RegisteredUser> user = userRepository.findByEmail(email);
-        RegisteredUser registeredUser = user.orElseThrow(() -> new UsernameNotFoundException("Username Not Found!"));
+        RegisteredUser registeredUser = user.get();
 
-        return new User(registeredUser.getEmail(),registeredUser.getPassword(),registeredUser.isActive(),true,true,true, null);
+        return new User(registeredUser.getEmail(),registeredUser.getPassword(),registeredUser.getActive(),true,true,true, null);
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(String roles) {

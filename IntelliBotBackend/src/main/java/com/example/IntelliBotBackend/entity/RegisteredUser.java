@@ -1,7 +1,9 @@
 package com.example.IntelliBotBackend.entity;
 
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -10,8 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "user_details")
 public class RegisteredUser {
     @Id
-    @Generated
-    private int id;
+    private ObjectId id;
 
     private String email;
 
@@ -19,7 +20,7 @@ public class RegisteredUser {
     private String password;
 
 
-    private boolean active;
+    private Boolean active;
 
 
     private String designation;
