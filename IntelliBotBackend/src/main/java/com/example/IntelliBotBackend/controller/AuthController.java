@@ -1,8 +1,10 @@
 package com.example.IntelliBotBackend.controller;
 
 import com.example.IntelliBotBackend.request.Login;
+import com.example.IntelliBotBackend.request.PromptRequest;
 import com.example.IntelliBotBackend.request.RegisterUser;
 import com.example.IntelliBotBackend.service.AuthService;
+import com.example.IntelliBotBackend.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     @Autowired
     private AuthService authService;
+    @Autowired
+    private Utils utils;
+
 
     /**
      * SignUp API
@@ -36,4 +41,5 @@ public class AuthController {
         return authService.login(login);
 
     }
+
 }
