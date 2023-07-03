@@ -16,14 +16,24 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    /**
+     * SignUp API
+     * @param registerUser
+     * @return
+     */
     @PostMapping("/sign-up")
-    public ResponseEntity<?> signup(@RequestBody RegisteredUser registerUser){
+    public ResponseEntity<?> signup(@RequestBody RegisterUser registerUser) {
         return authService.signup(registerUser);
     }
-//    @PostMapping("/sign-in")
-//    public AuthenticationResponse login(@RequestBody Login login){
-//
-//        return authService.login(login);
-//
-//    }
+
+    /**
+     * Login API
+     * @param login
+     * @return
+     */
+    @PostMapping("/sign-in")
+    public ResponseEntity<?> login(@RequestBody Login login) {
+        return authService.login(login);
+
+    }
 }

@@ -1,9 +1,11 @@
 package com.example.IntelliBotBackend.entity;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -13,15 +15,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class RegisteredUser {
     @Id
     private ObjectId id;
-
     private String email;
-
-
+    @JsonIgnore
     private String password;
-
-
     private Boolean active;
-
-
     private String designation;
 }

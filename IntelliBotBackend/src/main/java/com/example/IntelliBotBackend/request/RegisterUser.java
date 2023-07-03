@@ -11,8 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class RegisterUser {
 
 
-
-    private  String email;
+    private String email;
     private String password;
     private String designation;
 }
