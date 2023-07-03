@@ -9,6 +9,7 @@ import com.example.IntelliBotBackend.request.RegisterUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -16,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 @Service
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
 
     private static final String ENCRYPTION_ALGORITHM = "SHA-256";
     @Autowired
@@ -30,6 +31,7 @@ public class AuthServiceImpl implements AuthService{
 
     /**
      * Sign Up Service
+     *
      * @param registerUser
      * @return
      */
@@ -48,7 +50,7 @@ public class AuthServiceImpl implements AuthService{
             }
             return ResponseEntity.ok().body("User Already Exists!!");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ResponseEntity.badRequest().body("Error occurred during signup: " + e.getMessage());
         }
     }
 
@@ -68,6 +70,7 @@ public class AuthServiceImpl implements AuthService{
 
     /**
      * Login Service
+     *
      * @param login
      * @return
      */
@@ -75,19 +78,18 @@ public class AuthServiceImpl implements AuthService{
     public ResponseEntity<?> login(Login login) {
         try {
             RegisteredUser user = userRepository.findByEmail(login.getEmail()).orElse(null);
-            if (Objects.nonNull(user)) {
-                if (Objects.equals(user.getPassword(), encryptPassword(login.getPassword()))) {
-                    return ResponseEntity.ok(user);
-                }
+            if (Objects.nonNull(user) && Objects.equals(user.getPassword(), encryptPassword(login.getPassword()))) {
+                return ResponseEntity.ok(user);
             }
             return ResponseEntity.badRequest().body("User Not Found !!");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new UsernameNotFoundException("Error in fetching user!!" + e);
         }
     }
 
     /**
      * Encrypt Password
+     *
      * @param password
      * @return
      */
