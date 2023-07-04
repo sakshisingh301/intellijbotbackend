@@ -33,18 +33,11 @@ public class PromptsController {
 
     @PostMapping("/generatePrompts")
     public ResponseEntity<?> generatePrompts(@RequestBody PromptRequest promptRequest) throws Exception {
-        PromptsEntity promptsEntity = promptsService.getPromptsEntityByPromptReq(promptRequest);
-
         //generate prompts
-
-     String tags=promptsService.generatePrompts(promptsEntity);
-     String [] tagsResult={};
-        String[] splitArray = tags.split("\\s*,\\s*");
-        promptsEntity.setTags(splitArray);
-     //promptsEntity.setTags(tags);
-
-
-       return ResponseEntity.ok().body(promptsEntity);
+        PromptsEntity promptsEntity = promptsService.getPromptsEntityByPromptReq(promptRequest);
+        String tags = promptsService.generatePrompts(promptsEntity);
+        List<PromptsEntity> generatePrompts=promptsService.generatePromptByGptAndSave(promptsEntity, tags);
+        return ResponseEntity.ok().body(promptsEntity);
 
 
     }

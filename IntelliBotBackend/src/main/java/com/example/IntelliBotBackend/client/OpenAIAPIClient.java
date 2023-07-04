@@ -53,7 +53,7 @@ public class OpenAIAPIClient {
     private String model;
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public String getPromptOrTag(String SystemMessage,String InputTextFromUser) throws Exception {
+    public String getPromptOrTag(String SystemMessage, String InputTextFromUser) throws Exception {
 
         JSONObject item = new JSONObject();
         item.put("model", model);
@@ -70,9 +70,7 @@ public class OpenAIAPIClient {
         userMsg.put("content", InputTextFromUser);
         messages.put(userMsg);
         item.put("messages", messages);
-        String requestBody=item.toString();
-
-
+        String requestBody = item.toString();
 
         RequestEntity<String> requestEntity;
         requestEntity = RequestEntity
@@ -80,10 +78,6 @@ public class OpenAIAPIClient {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey)
                 .body(requestBody);
-
-
-
-
 
         // Create a RestTemplate instance
         RestTemplate restTemplate = new RestTemplate();
@@ -93,15 +87,14 @@ public class OpenAIAPIClient {
 
         // Read the response body as a string
         String responseBody = responseEntity.getBody();
-        String result=parseGptResponse(responseBody);
-
+        String result = parseGptResponse(responseBody);
 
         // Handle the response as per your requirements
         return result;
 
 
-
     }
+
     private String parseGptResponse(String responseBody) throws Exception {
         if (responseBody == null || responseBody.trim().isBlank()) {
             throw new Exception("Exception in getting response");
@@ -135,8 +128,6 @@ public class OpenAIAPIClient {
             return tagsOrPrompt;
         }
     }
-
-
 
 
 }
