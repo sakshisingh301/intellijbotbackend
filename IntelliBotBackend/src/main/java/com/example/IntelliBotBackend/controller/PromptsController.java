@@ -5,6 +5,7 @@ import com.example.IntelliBotBackend.request.PromptRequest;
 import com.example.IntelliBotBackend.service.PromptsService;
 import com.example.IntelliBotBackend.service.PromptsServiceImpl;
 import com.example.IntelliBotBackend.utilities.Utils;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +37,13 @@ public class PromptsController {
         //generate prompts
         PromptsEntity promptsEntity = promptsService.getPromptsEntityByPromptReq(promptRequest);
         String tags = promptsService.generatePrompts(promptsEntity);
-        List<PromptsEntity> generatePrompts=promptsService.generatePromptByGptAndSave(promptsEntity, tags);
-        return ResponseEntity.ok().body(promptsEntity);
-
-
+        PromptsEntity generatePrompts=promptsService.generatePromptByGptAndSave(promptsEntity, tags);
+        return ResponseEntity.ok().body(generatePrompts);
     }
+
+//    @PostMapping("/searchPrompts")
+//    public ResponseEntity<?> searchPrompts()
+//    {
+//        return null;
+//    }
 }

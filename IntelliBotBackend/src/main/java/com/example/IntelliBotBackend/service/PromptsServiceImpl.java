@@ -2,7 +2,9 @@ package com.example.IntelliBotBackend.service;
 
 import com.example.IntelliBotBackend.client.OpenAIAPIClient;
 import com.example.IntelliBotBackend.entity.PromptsEntity;
+import com.example.IntelliBotBackend.repository.PromptsRepository;
 import com.example.IntelliBotBackend.request.PromptRequest;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class PromptsServiceImpl implements PromptsService {
 
     @Autowired
     private OpenAIAPIClient openAIAPIClient;
+
+    @Autowired
+    private PromptsRepository promptsRepository;
 
 
     @Override
@@ -39,16 +44,12 @@ public class PromptsServiceImpl implements PromptsService {
     }
 
     @Override
-    public List<PromptsEntity> generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags) throws Exception {
-        List<PromptsEntity> promptsEntities = new ArrayList<>();
+    public PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags) throws Exception {
         String promptConst = String.format(TAG_FOR_PROMPT_GENERATION, promptsEntity.getSubCategory());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptsEntity.getPrompt().trim());
         promptsEntity.setTags(tags.split(","));
         promptsEntity.setPrompt(generatedPromptGPT);
-        promptsEntities.add(promptsEntity);
-
-        return promptsEntities;
-
-
+        promptsEntity.setPromptId(new ObjectId());
+        return promptsRepository.save(promptsEntity);
     }
 }
