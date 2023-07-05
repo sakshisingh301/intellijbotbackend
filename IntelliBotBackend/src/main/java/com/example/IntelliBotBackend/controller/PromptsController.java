@@ -2,6 +2,8 @@ package com.example.IntelliBotBackend.controller;
 
 import com.example.IntelliBotBackend.entity.PromptsEntity;
 import com.example.IntelliBotBackend.request.PromptRequest;
+import com.example.IntelliBotBackend.request.PromptSearchRequest;
+import com.example.IntelliBotBackend.response.PromptResponse;
 import com.example.IntelliBotBackend.service.PromptsService;
 import com.example.IntelliBotBackend.service.PromptsServiceImpl;
 import com.example.IntelliBotBackend.utilities.Utils;
@@ -41,9 +43,17 @@ public class PromptsController {
         return ResponseEntity.ok().body(generatePrompts);
     }
 
-//    @PostMapping("/searchPrompts")
-//    public ResponseEntity<?> searchPrompts()
-//    {
-//        return null;
-//    }
+    @PostMapping("/searchPrompts")
+    public ResponseEntity<?> searchPrompts(@RequestBody PromptSearchRequest promptSearchRequest) throws Exception {
+
+        //search for the prompt
+        if(!promptSearchRequest.getPrompts().isEmpty())
+        {
+            PromptResponse promptResponse=promptsService.getPromptResult(promptSearchRequest);
+            return ResponseEntity.ok().body(promptResponse);
+        }
+        else {
+            throw new Exception("please provide prompt");
+        }
+    }
 }

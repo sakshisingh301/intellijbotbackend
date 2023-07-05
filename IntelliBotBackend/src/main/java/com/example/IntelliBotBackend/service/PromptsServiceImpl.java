@@ -4,6 +4,8 @@ import com.example.IntelliBotBackend.client.OpenAIAPIClient;
 import com.example.IntelliBotBackend.entity.PromptsEntity;
 import com.example.IntelliBotBackend.repository.PromptsRepository;
 import com.example.IntelliBotBackend.request.PromptRequest;
+import com.example.IntelliBotBackend.request.PromptSearchRequest;
+import com.example.IntelliBotBackend.response.PromptResponse;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -14,8 +16,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.IntelliBotBackend.constants.Constants.TAG_FOR_PROMPT_GENERATION;
-import static com.example.IntelliBotBackend.constants.Constants.TAG_PROMPT_PREFIX;
+import static com.example.IntelliBotBackend.constants.Constants.*;
 
 @Service
 public class PromptsServiceImpl implements PromptsService {
@@ -51,5 +52,17 @@ public class PromptsServiceImpl implements PromptsService {
         promptsEntity.setPrompt(generatedPromptGPT);
         promptsEntity.setPromptId(new ObjectId());
         return promptsRepository.save(promptsEntity);
+    }
+
+    @Override
+    public PromptResponse getPromptResult(PromptSearchRequest promptSearchRequest) throws Exception {
+        String promptConst = String.format(TAG_FOR_PROMPTGEN, promptSearchRequest.getSubCategory());
+        String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptSearchRequest.getPrompts());
+        PromptResponse promptResponse=new PromptResponse();
+        promptResponse.setPrompt(generatedPromptGPT);
+        return promptResponse;
+
+
+
     }
 }
