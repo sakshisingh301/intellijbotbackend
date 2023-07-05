@@ -7,5 +7,5 @@ public class Constants {
 
     public static final String TAG_FOR_PROMPT_GENERATION="Construct a detailed prompt that I can further use in ChatGPT for creating  %s. Don't write the code for the requirement; only provide the ChatGPT prompt.";
 
-    public static final String TAG_FOR_PROMPTGEN="Provide appropriate result for this prompt.";
+    public static final String TAG_FOR_PROMPT_GEN="Provide appropriate result for this prompt.";
 }

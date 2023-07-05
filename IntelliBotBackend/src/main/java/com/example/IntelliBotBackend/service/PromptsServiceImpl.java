@@ -56,12 +56,11 @@ public class PromptsServiceImpl implements PromptsService {
 
     @Override
     public PromptResponse getPromptResult(PromptSearchRequest promptSearchRequest) throws Exception {
-        String promptConst = String.format(TAG_FOR_PROMPTGEN, promptSearchRequest.getSubCategory());
+        String promptConst = String.format(TAG_FOR_PROMPT_GEN, promptSearchRequest.getSubCategory());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptSearchRequest.getPrompts());
-        PromptResponse promptResponse=new PromptResponse();
+        PromptResponse promptResponse = new PromptResponse();
         promptResponse.setPrompt(generatedPromptGPT);
         return promptResponse;
-
 
 
     }

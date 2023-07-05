@@ -55,11 +55,11 @@ public class OpenAIAPIClient {
 
     public String getPromptOrTag(String SystemMessage, String InputTextFromUser) throws Exception {
 
-        JSONObject item = new JSONObject();
-        item.put("model", model);
-        item.put("temperature", temperature);
-        item.put("max_tokens", max_token);
-        item.put("top_p", topP);
+        JSONObject jsonItem = new JSONObject();
+        jsonItem.put("model", model);
+        jsonItem.put("temperature", temperature);
+        jsonItem.put("max_tokens", max_token);
+        jsonItem.put("top_p", topP);
         JSONObject systemMsg = new JSONObject();
         JSONArray messages = new JSONArray();
         systemMsg.put("role", "system");
@@ -69,8 +69,8 @@ public class OpenAIAPIClient {
         userMsg.put("role", "user");
         userMsg.put("content", InputTextFromUser);
         messages.put(userMsg);
-        item.put("messages", messages);
-        String requestBody = item.toString();
+        jsonItem.put("messages", messages);
+        String requestBody = jsonItem.toString();
 
         RequestEntity<String> requestEntity;
         requestEntity = RequestEntity
