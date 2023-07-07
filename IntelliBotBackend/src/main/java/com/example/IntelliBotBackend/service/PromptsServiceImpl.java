@@ -71,7 +71,7 @@ public class PromptsServiceImpl implements PromptsService {
 
     @Override
     public PromptResponse getPromptResult(PromptSearchRequest promptSearchRequest) throws Exception {
-        String promptConst = String.format(TAG_FOR_PROMPTGEN, promptSearchRequest.getSubCategory());
+        String promptConst = String.format(TAG_FOR_PROMPT_GEN, promptSearchRequest.getSubCategory());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptSearchRequest.getPrompts());
         PromptResponse promptResponse = new PromptResponse();
         LocalDateTime now = LocalDateTime.now();
@@ -87,7 +87,6 @@ public class PromptsServiceImpl implements PromptsService {
         PromptResponse response = promptResultRepository.save(promptResponse);
         historyService.saveHistoryData(null, response, response.getUserId());
         return response;
-
 
     }
 }

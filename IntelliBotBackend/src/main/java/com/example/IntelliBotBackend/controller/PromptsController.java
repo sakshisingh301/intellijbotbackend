@@ -47,7 +47,7 @@ public class PromptsController {
     public ResponseEntity<?> searchPrompts(@RequestBody PromptSearchRequest promptSearchRequest) throws Exception {
 
         //search for the prompt
-        if(!promptSearchRequest.getPrompts().isEmpty())
+        if(!promptSearchRequest.getPrompts().isBlank())
         {
             PromptResponse promptResponse=promptsService.getPromptResult(promptSearchRequest);
             return ResponseEntity.ok().body(promptResponse);
