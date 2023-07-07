@@ -39,7 +39,7 @@ public class PromptsController {
         //generate prompts
         PromptsEntity promptsEntity = promptsService.getPromptsEntityByPromptReq(promptRequest);
         String tags = promptsService.generatePrompts(promptsEntity);
-        PromptsEntity generatePrompts=promptsService.generatePromptByGptAndSave(promptsEntity, tags);
+        PromptsEntity generatePrompts=promptsService.generatePromptByGptAndSave(promptsEntity, tags,promptRequest);
         return ResponseEntity.ok().body(generatePrompts);
     }
 

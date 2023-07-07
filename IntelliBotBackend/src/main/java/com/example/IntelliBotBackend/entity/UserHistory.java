@@ -10,9 +10,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "prompt_result")
-public class PromptResultEntity {
+@Document(collection = "user_history")
+public class UserHistory {
     @Id
-    private ObjectId promptResponseId;
-    private String prompt;
+    private ObjectId userHistoryId;
+
+
 }

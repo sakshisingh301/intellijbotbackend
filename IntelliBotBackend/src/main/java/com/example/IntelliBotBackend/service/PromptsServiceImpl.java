@@ -2,19 +2,20 @@ package com.example.IntelliBotBackend.service;
 
 import com.example.IntelliBotBackend.client.OpenAIAPIClient;
 import com.example.IntelliBotBackend.entity.PromptsEntity;
+import com.example.IntelliBotBackend.repository.HistoryEntityRepository;
+import com.example.IntelliBotBackend.repository.PromptResultRepository;
 import com.example.IntelliBotBackend.repository.PromptsRepository;
 import com.example.IntelliBotBackend.request.PromptRequest;
 import com.example.IntelliBotBackend.request.PromptSearchRequest;
 import com.example.IntelliBotBackend.response.PromptResponse;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import static com.example.IntelliBotBackend.constants.Constants.*;
 
@@ -26,6 +27,12 @@ public class PromptsServiceImpl implements PromptsService {
 
     @Autowired
     private PromptsRepository promptsRepository;
+
+    @Autowired
+    private PromptResultRepository promptResultRepository;
+
+    @Autowired
+    private HistoryService historyService;
 
 
     @Override
@@ -45,23 +52,41 @@ public class PromptsServiceImpl implements PromptsService {
     }
 
     @Override
-    public PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags) throws Exception {
+    public PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags,PromptRequest promptRequest) throws Exception {
         String promptConst = String.format(TAG_FOR_PROMPT_GENERATION, promptsEntity.getSubCategory());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptsEntity.getPrompt().trim());
+//        LocalDateTime now = LocalDateTime.now();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        String formattedDateTime = now.format(formatter);
         promptsEntity.setTags(tags.split(","));
         promptsEntity.setPrompt(generatedPromptGPT);
+        promptsEntity.setUseCase(promptRequest.getInputText());
         promptsEntity.setPromptId(new ObjectId());
-        return promptsRepository.save(promptsEntity);
+        promptsEntity.setUserId(promptRequest.getUserId());
+        promptsEntity.setAddedDate(new Date());
+       PromptsEntity result= promptsRepository.save(promptsEntity);
+        historyService.saveHistoryData(result, null, result.getUserId());
+        return result;
     }
 
     @Override
     public PromptResponse getPromptResult(PromptSearchRequest promptSearchRequest) throws Exception {
         String promptConst = String.format(TAG_FOR_PROMPTGEN, promptSearchRequest.getSubCategory());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptSearchRequest.getPrompts());
-        PromptResponse promptResponse=new PromptResponse();
+        PromptResponse promptResponse = new PromptResponse();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = now.format(formatter);
+        promptResponse.setUseCase(promptSearchRequest.getPrompts());
         promptResponse.setPrompt(generatedPromptGPT);
-        return promptResponse;
-
+        promptResponse.setPromptResponseId(new ObjectId());
+        promptResponse.setUserId( promptSearchRequest.getUserId());
+        promptResponse.setCategory(promptSearchRequest.getCategory());
+        promptResponse.setSubCategory(promptSearchRequest.getSubCategory());
+        promptResponse.setAddedDate(new Date());
+        PromptResponse response = promptResultRepository.save(promptResponse);
+        historyService.saveHistoryData(null, response, response.getUserId());
+        return response;
 
 
     }

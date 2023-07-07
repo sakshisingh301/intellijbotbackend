@@ -1,4 +1,4 @@
-package com.example.IntelliBotBackend.response;
+package com.example.IntelliBotBackend.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,17 +10,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "promptResponse")
-public class PromptResponse {
+@NoArgsConstructor
+@Document(collection = "history")
+public class HistoryEntity {
 
     @Id
-    private ObjectId promptResponseId;
-    private String useCase;
-    private String prompt;
+    private ObjectId historyId;
+
     private ObjectId userId;
-    private String category;
-    private String subCategory;
+
+    private ObjectId promptId;
+
+    private ObjectId promptResponseId;
+
     private Date addedDate;
+
+
 }

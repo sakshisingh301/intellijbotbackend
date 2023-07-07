@@ -15,7 +15,7 @@ public interface PromptsService {
 
     PromptsEntity getPromptsEntityByPromptReq(PromptRequest userPromptRequest);
 
-    PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags) throws Exception;
+    PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags,PromptRequest promptRequest) throws Exception;
 
     PromptResponse getPromptResult(PromptSearchRequest promptSearchRequest) throws Exception;
 }

@@ -5,14 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PromptSearchRequest {
-
-    private String category;
-    private String subCategory;
+public class HistoryRequest {
     private ObjectId userId;
-    private String prompts;
 }

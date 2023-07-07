@@ -7,9 +7,10 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 
 @Repository
 public interface PromptsRepository extends MongoRepository<PromptsEntity, ObjectId> {
-   // Optional<RegisteredUser> findByEmail(String email);
+    List<PromptsEntity> findByUserId(ObjectId userId);
 }
