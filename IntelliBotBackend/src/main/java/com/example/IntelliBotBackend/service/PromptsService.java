@@ -5,6 +5,7 @@ import com.example.IntelliBotBackend.request.PromptRequest;
 import com.example.IntelliBotBackend.request.PromptSearchRequest;
 import com.example.IntelliBotBackend.response.PromptResponse;
 import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

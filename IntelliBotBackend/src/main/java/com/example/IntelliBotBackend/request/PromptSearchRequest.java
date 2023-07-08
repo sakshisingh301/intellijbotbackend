@@ -15,4 +15,6 @@ public class PromptSearchRequest {
     private String subCategory;
     private ObjectId userId;
     private String prompts;
+    private Boolean isPromptGeneratedAlready;
+    private ObjectId genPromptId;
 }

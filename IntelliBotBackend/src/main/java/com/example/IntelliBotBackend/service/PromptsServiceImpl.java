@@ -10,12 +10,14 @@ import com.example.IntelliBotBackend.request.PromptSearchRequest;
 import com.example.IntelliBotBackend.response.PromptResponse;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Optional;
 
 import static com.example.IntelliBotBackend.constants.Constants.*;
 
@@ -55,9 +57,6 @@ public class PromptsServiceImpl implements PromptsService {
     public PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags,PromptRequest promptRequest) throws Exception {
         String promptConst = String.format(TAG_FOR_PROMPT_GENERATION, promptsEntity.getSubCategory());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptsEntity.getPrompt().trim());
-//        LocalDateTime now = LocalDateTime.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        String formattedDateTime = now.format(formatter);
         promptsEntity.setTags(tags.split(","));
         promptsEntity.setPrompt(generatedPromptGPT);
         promptsEntity.setUseCase(promptRequest.getInputText());
@@ -74,9 +73,6 @@ public class PromptsServiceImpl implements PromptsService {
         String promptConst = String.format(TAG_FOR_PROMPT_GEN, promptSearchRequest.getSubCategory());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptSearchRequest.getPrompts());
         PromptResponse promptResponse = new PromptResponse();
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDateTime = now.format(formatter);
         promptResponse.setUseCase(promptSearchRequest.getPrompts());
         promptResponse.setPrompt(generatedPromptGPT);
         promptResponse.setPromptResponseId(new ObjectId());
@@ -85,7 +81,15 @@ public class PromptsServiceImpl implements PromptsService {
         promptResponse.setSubCategory(promptSearchRequest.getSubCategory());
         promptResponse.setAddedDate(new Date());
         PromptResponse response = promptResultRepository.save(promptResponse);
-        historyService.saveHistoryData(null, response, response.getUserId());
+       PromptsEntity  historyData = null;
+
+        if (promptSearchRequest.getIsPromptGeneratedAlready()) {
+            Optional<PromptsEntity> prompt = promptsRepository.findById(promptSearchRequest.getGenPromptId());
+            if (prompt.isPresent()) {
+                historyData =  prompt.get();
+            }
+        }
+        historyService.saveHistoryData(historyData, response, response.getUserId());
         return response;
 
     }
