@@ -1,6 +1,7 @@
 package com.example.IntelliBotBackend.service;
 
 import com.example.IntelliBotBackend.client.OpenAIAPIClient;
+import com.example.IntelliBotBackend.client.OpenApiModerationAPIClient;
 import com.example.IntelliBotBackend.entity.PromptsEntity;
 import com.example.IntelliBotBackend.repository.HistoryEntityRepository;
 import com.example.IntelliBotBackend.repository.PromptResultRepository;
@@ -26,6 +27,8 @@ public class PromptsServiceImpl implements PromptsService {
 
     @Autowired
     private OpenAIAPIClient openAIAPIClient;
+
+
 
     @Autowired
     private PromptsRepository promptsRepository;
@@ -55,6 +58,7 @@ public class PromptsServiceImpl implements PromptsService {
 
     @Override
     public PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags,PromptRequest promptRequest) throws Exception {
+
         String promptConst = String.format(TAG_FOR_PROMPT_GENERATION, promptsEntity.getSubCategory());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptsEntity.getPrompt().trim());
         promptsEntity.setTags(tags.split(","));
