@@ -1,5 +1,6 @@
 package com.example.IntelliBotBackend.controller;
 
+import com.example.IntelliBotBackend.client.OpenApiModerationAPIClient;
 import com.example.IntelliBotBackend.entity.PromptsEntity;
 import com.example.IntelliBotBackend.request.PromptRequest;
 import com.example.IntelliBotBackend.request.PromptSearchRequest;
@@ -29,6 +30,8 @@ public class PromptsController {
 
     @Autowired
     private Utils utils;
+    @Autowired
+    private OpenApiModerationAPIClient openApiModerationAPIClient;
 
     @Autowired
     private PromptsService promptsService;
@@ -37,6 +40,14 @@ public class PromptsController {
     @PostMapping("/generatePrompts")
     public ResponseEntity<?> generatePrompts(@RequestBody PromptRequest promptRequest) throws Exception {
         //generate prompts
+
+        if(promptRequest.getIsSafeMode())
+        {
+            if(openApiModerationAPIClient.IsInputTextVoilated(promptRequest.getInputText()))
+            {
+                return ResponseEntity.ok().body("Content is not valid !!");
+            }
+        }
         PromptsEntity promptsEntity = promptsService.getPromptsEntityByPromptReq(promptRequest);
         String tags = promptsService.generatePrompts(promptsEntity);
         PromptsEntity generatePrompts=promptsService.generatePromptByGptAndSave(promptsEntity, tags,promptRequest);
@@ -46,6 +57,13 @@ public class PromptsController {
     @PostMapping("/searchPrompts")
     public ResponseEntity<?> searchPrompts(@RequestBody PromptSearchRequest promptSearchRequest) throws Exception {
 
+        if(promptSearchRequest.getIsSafeMode())
+        {
+            if(openApiModerationAPIClient.IsInputTextVoilated(promptSearchRequest.getPrompts()))
+            {
+                return ResponseEntity.ok().body("Content is not valid !!");
+            }
+        }
         //search for the prompt
         if(!promptSearchRequest.getPrompts().isBlank())
         {
