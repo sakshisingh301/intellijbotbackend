@@ -1,9 +1,7 @@
 package com.example.IntelliBotBackend.service;
 
 import com.example.IntelliBotBackend.client.OpenAIAPIClient;
-import com.example.IntelliBotBackend.client.OpenApiModerationAPIClient;
 import com.example.IntelliBotBackend.entity.PromptsEntity;
-import com.example.IntelliBotBackend.repository.HistoryEntityRepository;
 import com.example.IntelliBotBackend.repository.PromptResultRepository;
 import com.example.IntelliBotBackend.repository.PromptsRepository;
 import com.example.IntelliBotBackend.request.PromptRequest;
@@ -11,13 +9,10 @@ import com.example.IntelliBotBackend.request.PromptSearchRequest;
 import com.example.IntelliBotBackend.response.PromptResponse;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 import static com.example.IntelliBotBackend.constants.Constants.*;
@@ -27,7 +22,6 @@ public class PromptsServiceImpl implements PromptsService {
 
     @Autowired
     private OpenAIAPIClient openAIAPIClient;
-
 
 
     @Autowired
@@ -44,8 +38,8 @@ public class PromptsServiceImpl implements PromptsService {
     public String generatePrompts(PromptsEntity promptsEntity) throws Exception {
 
         String promptConstLang = String.format(TAG_PROMPT_PREFIX, promptsEntity.getLang());
-        String promptConstConversion = String.format(CONVERT_TAG_PROMPT_IN_LANG, promptsEntity.getPrompt(),promptsEntity.getLang());
-        String tags = openAIAPIClient.getPromptOrTag(promptConstLang,promptConstConversion);
+        String promptConstConversion = String.format(CONVERT_TAG_PROMPT_IN_LANG, promptsEntity.getPrompt(), promptsEntity.getLang());
+        String tags = openAIAPIClient.getPromptOrTag(promptConstLang, promptConstConversion);
         return tags;
     }
 
@@ -61,9 +55,9 @@ public class PromptsServiceImpl implements PromptsService {
     }
 
     @Override
-    public PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags,PromptRequest promptRequest) throws Exception {
+    public PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags, PromptRequest promptRequest) throws Exception {
 
-        String promptConst = String.format(TAG_FOR_PROMPT_GENERATION, promptsEntity.getSubCategory(),promptsEntity.getLang());
+        String promptConst = String.format(TAG_FOR_PROMPT_GENERATION, promptsEntity.getSubCategory(), promptsEntity.getLang().isBlank() ? "English" : promptsEntity.getLang().toLowerCase(Locale.getDefault()));
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptsEntity.getPrompt().trim());
         promptsEntity.setTags(tags.split(","));
         promptsEntity.setPrompt(generatedPromptGPT);
@@ -71,30 +65,30 @@ public class PromptsServiceImpl implements PromptsService {
         promptsEntity.setPromptId(new ObjectId());
         promptsEntity.setUserId(promptRequest.getUserId());
         promptsEntity.setAddedDate(new Date());
-       PromptsEntity result= promptsRepository.save(promptsEntity);
+        PromptsEntity result = promptsRepository.save(promptsEntity);
         historyService.saveHistoryData(result, null, result.getUserId());
         return result;
     }
 
     @Override
     public PromptResponse getPromptResult(PromptSearchRequest promptSearchRequest) throws Exception {
-        String promptConst = String.format(TAG_FOR_PROMPT_GEN,promptSearchRequest.getLang());
+        String promptConst = String.format(TAG_FOR_PROMPT_GEN, promptSearchRequest.getLang().isBlank() ? "English" : promptSearchRequest.getLang().toLowerCase(Locale.getDefault()));
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptSearchRequest.getPrompts());
         PromptResponse promptResponse = new PromptResponse();
         promptResponse.setUseCase(promptSearchRequest.getPrompts());
         promptResponse.setPrompt(generatedPromptGPT);
         promptResponse.setPromptResponseId(new ObjectId());
-        promptResponse.setUserId( promptSearchRequest.getUserId());
+        promptResponse.setUserId(promptSearchRequest.getUserId());
         promptResponse.setCategory(promptSearchRequest.getCategory());
         promptResponse.setSubCategory(promptSearchRequest.getSubCategory());
         promptResponse.setAddedDate(new Date());
         PromptResponse response = promptResultRepository.save(promptResponse);
-       PromptsEntity  historyData = null;
+        PromptsEntity historyData = null;
 
         if (promptSearchRequest.getIsPromptGeneratedAlready()) {
             Optional<PromptsEntity> prompt = promptsRepository.findById(promptSearchRequest.getGenPromptId());
             if (prompt.isPresent()) {
-                historyData =  prompt.get();
+                historyData = prompt.get();
             }
         }
         historyService.saveHistoryData(historyData, response, response.getUserId());
