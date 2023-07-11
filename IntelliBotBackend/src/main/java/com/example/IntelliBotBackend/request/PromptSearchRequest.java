@@ -18,4 +18,5 @@ public class PromptSearchRequest {
     private Boolean isPromptGeneratedAlready;
     private ObjectId genPromptId;
     private String lang;
+    private Boolean isSafeMode;
 }

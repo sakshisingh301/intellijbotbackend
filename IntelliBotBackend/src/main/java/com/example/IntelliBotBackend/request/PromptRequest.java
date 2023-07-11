@@ -14,5 +14,6 @@ public class PromptRequest {
     private String category;
     private String subCategory;
     private String lang;
+    private Boolean isSafeMode;
 }
 
