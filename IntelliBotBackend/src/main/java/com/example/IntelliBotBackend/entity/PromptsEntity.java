@@ -28,5 +28,6 @@ public class PromptsEntity {
     private String subCategory;
     private Boolean fromGPT;
     private Date addedDate;
+    private String lang;
 
 }

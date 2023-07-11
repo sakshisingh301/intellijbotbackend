@@ -42,7 +42,10 @@ public class PromptsServiceImpl implements PromptsService {
 
     @Override
     public String generatePrompts(PromptsEntity promptsEntity) throws Exception {
-        String tags = openAIAPIClient.getPromptOrTag(TAG_PROMPT_PREFIX, promptsEntity.getPrompt());
+
+        String promptConstLang = String.format(TAG_PROMPT_PREFIX, promptsEntity.getLang());
+        String promptConstConversion = String.format(CONVERT_TAG_PROMPT_IN_LANG, promptsEntity.getPrompt(),promptsEntity.getLang());
+        String tags = openAIAPIClient.getPromptOrTag(promptConstLang,promptConstConversion);
         return tags;
     }
 
@@ -52,6 +55,7 @@ public class PromptsServiceImpl implements PromptsService {
         promptsEntity.setPrompt(userPromptRequest.getInputText());
         promptsEntity.setCategory(userPromptRequest.getCategory());
         promptsEntity.setSubCategory(userPromptRequest.getSubCategory());
+        promptsEntity.setLang(userPromptRequest.getLang());
         promptsEntity.setFromGPT(false);
         return promptsEntity;
     }
@@ -59,7 +63,7 @@ public class PromptsServiceImpl implements PromptsService {
     @Override
     public PromptsEntity generatePromptByGptAndSave(PromptsEntity promptsEntity, String tags,PromptRequest promptRequest) throws Exception {
 
-        String promptConst = String.format(TAG_FOR_PROMPT_GENERATION, promptsEntity.getSubCategory());
+        String promptConst = String.format(TAG_FOR_PROMPT_GENERATION, promptsEntity.getSubCategory(),promptsEntity.getLang());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptsEntity.getPrompt().trim());
         promptsEntity.setTags(tags.split(","));
         promptsEntity.setPrompt(generatedPromptGPT);
@@ -74,7 +78,7 @@ public class PromptsServiceImpl implements PromptsService {
 
     @Override
     public PromptResponse getPromptResult(PromptSearchRequest promptSearchRequest) throws Exception {
-        String promptConst = String.format(TAG_FOR_PROMPT_GEN, promptSearchRequest.getSubCategory());
+        String promptConst = String.format(TAG_FOR_PROMPT_GEN,promptSearchRequest.getLang());
         String generatedPromptGPT = openAIAPIClient.getPromptOrTag(promptConst, promptSearchRequest.getPrompts());
         PromptResponse promptResponse = new PromptResponse();
         promptResponse.setUseCase(promptSearchRequest.getPrompts());

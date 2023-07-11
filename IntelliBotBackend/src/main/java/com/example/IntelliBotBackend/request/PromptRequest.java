@@ -13,5 +13,6 @@ public class PromptRequest {
     private String inputText;
     private String category;
     private String subCategory;
+    private String lang;
 }
 
