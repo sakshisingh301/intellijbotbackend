@@ -33,11 +33,12 @@ public class HistoryServiceImpl implements HistoryService {
 
 
     @Override
-    public HistoryEntity saveHistoryData(PromptsEntity promptEntity, PromptResponse promptResponse, ObjectId userId) {
+    public HistoryEntity saveHistoryData(PromptsEntity promptEntity, PromptResponse promptResponse, ObjectId userId, String inputText) {
 
         HistoryEntity historyEntity = new HistoryEntity();
         historyEntity.setAddedDate(new Date());
         historyEntity.setUserId(userId);
+        historyEntity.setInputText(inputText);
         historyEntity.setPromptId(Objects.nonNull(promptEntity) ? promptEntity.getPromptId() : null);
         historyEntity.setPromptResponseId(Objects.nonNull(promptResponse) ? promptResponse.getPromptResponseId() : null);
         return historyEntityRepository.save(historyEntity);
@@ -58,7 +59,8 @@ public class HistoryServiceImpl implements HistoryService {
                             ? promptResultRepository.findById(history.getPromptResponseId()).orElse(null)
                             : null;
                     historyResponse.setGeneratePrompts(promptsEntity);
-                    historyResponse.setUseCase(Objects.nonNull(promptsEntity) ? promptsEntity.getUseCase() : promptResponse.getUseCase());
+//                    historyResponse.setUseCase(Objects.nonNull(promptsEntity) ? promptsEntity.getUseCase() : promptResponse.getUseCase());
+                    historyResponse.setUseCase(history.getInputText());
                     historyResponse.setSearchedPrompts(promptResponse);
                     historyResponse.setHistoryId(history.getHistoryId());
                     return historyResponse;

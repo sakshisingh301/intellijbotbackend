@@ -16,7 +16,7 @@ public class ModerationController {
 
 
     @PostMapping("/check-restrict")
-    public boolean checkRestriction( @RequestBody String inputText) throws IOException {
+    public boolean checkRestriction(@RequestBody String inputText) throws IOException {
 
         return moderationService.checkModeration(inputText);
     }

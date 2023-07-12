@@ -7,20 +7,14 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "history")
-public class HistoryEntity {
-
+@Document(collection = "image")
+public class ImageEntity {
     @Id
-    private ObjectId historyId;
+    private ObjectId imageId;
+    private String imageUrl;
     private ObjectId userId;
-    private String inputText;
-    private ObjectId promptId;
-    private ObjectId promptResponseId;
-    private Date addedDate;
-
+    private String promptSearched;
 }

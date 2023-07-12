@@ -16,8 +16,8 @@ public class HistoryController {
     private HistoryService historyService;
 
     @PostMapping("/getByUserId")
-    public ResponseEntity<?> addPrompts(@RequestBody HistoryRequest historyRequest){
-       // HistoryResponse historyResponse=
+    public ResponseEntity<?> getHistoryOfAnUser(@RequestBody HistoryRequest historyRequest){
+
         AllHistoryResponse historyResponse=historyService.getHistoryOfTheUser(historyRequest);
         return ResponseEntity.ok().body(historyResponse);
 

@@ -66,7 +66,7 @@ public class PromptsServiceImpl implements PromptsService {
         promptsEntity.setUserId(promptRequest.getUserId());
         promptsEntity.setAddedDate(new Date());
         PromptsEntity result = promptsRepository.save(promptsEntity);
-        historyService.saveHistoryData(result, null, result.getUserId());
+        historyService.saveHistoryData(result, null, result.getUserId(), promptRequest.getInputText());
         return result;
     }
 
@@ -91,7 +91,7 @@ public class PromptsServiceImpl implements PromptsService {
                 historyData = prompt.get();
             }
         }
-        historyService.saveHistoryData(historyData, response, response.getUserId());
+        historyService.saveHistoryData(historyData, response, response.getUserId(), promptSearchRequest.getPrompts());
         return response;
 
     }

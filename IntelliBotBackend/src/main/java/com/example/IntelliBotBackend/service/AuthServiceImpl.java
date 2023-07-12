@@ -1,6 +1,6 @@
 package com.example.IntelliBotBackend.service;
 
-import com.example.IntelliBotBackend.config.JwtProvider;
+//import com.example.IntelliBotBackend.config.JwtProvider;
 import com.example.IntelliBotBackend.config.UserDetailsServiceImpl;
 import com.example.IntelliBotBackend.entity.RegisteredUser;
 import com.example.IntelliBotBackend.repository.UserRepository;
@@ -26,8 +26,8 @@ public class AuthServiceImpl implements AuthService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
-    @Autowired
-    private JwtProvider jwtProvider;
+//    @Autowired
+//    private JwtProvider jwtProvider;
 
     /**
      * Sign Up Service

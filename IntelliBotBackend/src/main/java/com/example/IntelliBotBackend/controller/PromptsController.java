@@ -2,9 +2,12 @@ package com.example.IntelliBotBackend.controller;
 
 import com.example.IntelliBotBackend.client.OpenApiModerationAPIClient;
 import com.example.IntelliBotBackend.entity.PromptsEntity;
+import com.example.IntelliBotBackend.repository.HistoryEntityRepository;
 import com.example.IntelliBotBackend.request.PromptRequest;
 import com.example.IntelliBotBackend.request.PromptSearchRequest;
 import com.example.IntelliBotBackend.response.PromptResponse;
+import com.example.IntelliBotBackend.service.HistoryService;
+import com.example.IntelliBotBackend.service.HistoryServiceImpl;
 import com.example.IntelliBotBackend.service.PromptsService;
 import com.example.IntelliBotBackend.service.PromptsServiceImpl;
 import com.example.IntelliBotBackend.utilities.Utils;
@@ -35,16 +38,19 @@ public class PromptsController {
 
     @Autowired
     private PromptsService promptsService;
+
+    @Autowired
+    private HistoryService historyService;
     private static final Logger logger = LoggerFactory.getLogger(PromptsController.class);
 
     @PostMapping("/generatePrompts")
     public ResponseEntity<?> generatePrompts(@RequestBody PromptRequest promptRequest) throws Exception {
         //generate prompts
-
         if(promptRequest.getIsSafeMode())
         {
             if(openApiModerationAPIClient.IsInputTextVoilated(promptRequest.getInputText()))
             {
+                historyService.saveHistoryData(null, null, promptRequest.getUserId(), promptRequest.getInputText());
                 return ResponseEntity.ok().body("Content is not valid !!");
             }
         }
