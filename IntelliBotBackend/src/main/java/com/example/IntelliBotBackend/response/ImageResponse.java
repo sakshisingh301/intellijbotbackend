@@ -14,4 +14,5 @@ public class ImageResponse {
     private String imageUrl;
     private ObjectId userId;
     private String promptSearched;
+    private String description;
 }
